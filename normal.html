@@ -2,208 +2,377 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Vaisakh K — Senior Software Engineer</title>
 <meta name="description" content="Vaisakh K — Senior Software Engineer specializing in React and TypeScript.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <style>
-  .wrap { max-width: 900px; margin: 0 auto; padding: 0 24px; }
-  section[id] { scroll-margin-top: 50px; }
-  nav { position: sticky; top: 0; z-index: 10; background: rgba(10,11,13,.85); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
-  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; }
-  .logo { font-weight: 700; }
-  .logo span { color: var(--accent); }
-  .links { display: flex; gap: 22px; font-size: 14px; color: var(--muted); align-items: center; }
-  .links a:hover { color: var(--text); }
-  .links .term { font-family: var(--mono); color: var(--accent); border: 1px solid var(--line); padding: 4px 10px; border-radius: 6px; }
-  .links .term:hover { border-color: var(--accent); color: var(--accent); }
-  section { padding: 84px 0 0; }
-  .label { font-family: var(--mono); font-size: 13px; color: var(--accent); margin-bottom: 8px; }
-  h2 { font-size: 28px; letter-spacing: -.01em; margin-bottom: 28px; }
-  .hero { padding-top: 110px; }
-  .hero h1 { font-size: clamp(40px, 8vw, 72px); line-height: 1.05; letter-spacing: -.03em; }
-  .hero h1 em { font-style: normal; color: var(--accent); }
-  .hero p.lead { color: var(--muted); font-size: 19px; max-width: 600px; margin: 22px 0 30px; }
-  .badge { display: inline-flex; gap: 8px; align-items: center; font-size: 13px; color: var(--muted); border: 1px solid var(--line); border-radius: 99px; padding: 5px 14px; margin-bottom: 22px; }
-  .badge i { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); }
+  :root { --glass: rgba(255,255,255,.035); --border: rgba(255,255,255,.08); }
+  body { overflow-x: hidden; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+  /* ambient background */
+  .ambient { position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(700px 420px at 12% -5%, rgba(249,115,22,.16), transparent 70%),
+      radial-gradient(600px 400px at 95% 25%, rgba(59,130,246,.10), transparent 70%),
+      radial-gradient(500px 400px at 40% 100%, rgba(147,51,234,.08), transparent 70%); }
+  .ambient::after { content: ""; position: absolute; inset: 0; opacity: .5;
+    background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 64px 64px; -webkit-mask-image: radial-gradient(ellipse at 50% 0%, #000 0%, transparent 65%); mask-image: radial-gradient(ellipse at 50% 0%, #000 0%, transparent 65%); }
+
+  /* floating nav */
+  nav { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 20; max-width: calc(100% - 24px);
+    display: flex; align-items: center; gap: 4px; padding: 6px; border-radius: 99px;
+    background: rgba(14,15,18,.65); border: 1px solid var(--border); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+  nav .logo { font-weight: 800; padding: 6px 14px; letter-spacing: -.02em; } nav .logo span { color: var(--accent); }
+  nav .links { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; }
+  nav .links::-webkit-scrollbar { display: none; }
+  nav a.l { font-size: 13px; color: var(--muted); padding: 7px 13px; border-radius: 99px; white-space: nowrap; transition: .2s; }
+  nav a.l:hover { color: var(--text); } nav a.l.on { color: #fff; background: rgba(255,255,255,.09); }
+  nav a.term { font-family: var(--mono); font-size: 12px; color: #000; background: var(--accent); padding: 7px 14px; border-radius: 99px; font-weight: 600; white-space: nowrap; margin-left: 4px; }
+  nav a.term:hover { background: var(--accent-2); }
+
+  section { padding: 110px 0 0; scroll-margin-top: 20px; }
+  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .eyebrow::after { content: ""; height: 1px; width: 56px; background: linear-gradient(90deg, var(--accent), transparent); }
+  h2 { font-size: clamp(28px, 4.5vw, 42px); letter-spacing: -.03em; line-height: 1.1; margin-bottom: 40px; font-weight: 700; }
+  .grad { background: linear-gradient(100deg, #fff 20%, var(--accent) 90%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+  /* spotlight card base */
+  .spot { position: relative; background: var(--glass); border: 1px solid var(--border); border-radius: 18px; overflow: hidden; transition: border-color .25s, transform .25s; }
+  .spot::before { content: ""; position: absolute; inset: 0; opacity: 0; transition: opacity .3s; pointer-events: none;
+    background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 50%), rgba(249,115,22,.14), transparent 60%); }
+  .spot:hover::before { opacity: 1; } .spot:hover { border-color: rgba(249,115,22,.4); }
+
+  /* hero */
+  .hero { min-height: 100vh; min-height: 100svh; display: flex; align-items: center; padding: 120px 0 60px; }
+  .hero .wrap { display: grid; grid-template-columns: 1.25fr 1fr; gap: 56px; align-items: center; }
+  .hello { font-family: var(--mono); font-size: 14px; color: var(--muted); margin-bottom: 18px; }
+  .hello b { color: var(--accent); font-weight: 500; }
+  .hero h1 { font-size: clamp(44px, 7.5vw, 84px); line-height: 1; letter-spacing: -.045em; font-weight: 800; }
+  .hero h1 .grad { display: inline-block; }
+  .role { font-size: clamp(18px, 2.4vw, 24px); color: #c9ccd3; margin: 20px 0 0; font-weight: 500; min-height: 1.6em; }
+  .role .cur { display: inline-block; width: 2px; height: 1em; background: var(--accent); margin-left: 3px; vertical-align: -3px; animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .lead { color: var(--muted); font-size: 17px; max-width: 520px; margin: 18px 0 32px; }
   .btns { display: flex; gap: 12px; flex-wrap: wrap; }
-  .btn { padding: 10px 20px; border-radius: 8px; border: 1px solid var(--line); font-size: 14px; transition: .2s; }
-  .btn.primary { background: var(--accent); border-color: var(--accent); color: #000; font-weight: 600; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: 12px; border: 1px solid var(--border); font-size: 14px; font-weight: 500; transition: .2s; background: var(--glass); }
   .btn:hover { border-color: var(--accent); transform: translateY(-2px); }
-  .about p { color: #c4c7ce; margin-bottom: 14px; max-width: 720px; }
-  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 30px; }
-  .stat { border: 1px solid var(--line); border-radius: 12px; padding: 18px; background: var(--card); }
-  .stat b { display: block; font-size: 26px; color: var(--accent); }
-  .stat span { font-size: 13px; color: var(--muted); }
-  .tl { border-left: 1px solid var(--line); margin-left: 6px; }
-  .job { position: relative; padding: 0 0 34px 28px; }
-  .job::before { content: ""; position: absolute; left: -5px; top: 8px; width: 9px; height: 9px; border-radius: 50%; background: var(--accent); }
-  .job h3 { font-size: 18px; }
-  .job .meta { color: var(--muted); font-size: 14px; margin: 2px 0 10px; }
-  .job p { color: #c4c7ce; }
-  .job ul { margin: 10px 0 0 18px; color: #c4c7ce; }
-  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-  .proj { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px; cursor: pointer; transition: .2s; display: flex; flex-direction: column; }
-  .proj:hover { border-color: var(--accent); transform: translateY(-3px); }
-  .proj .kind { font-family: var(--mono); font-size: 12px; color: var(--accent); }
-  .proj h3 { margin: 6px 0 8px; font-size: 19px; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #0a0a0a; font-weight: 600; box-shadow: 0 8px 28px -10px rgba(249,115,22,.7); }
+  .btn.primary:hover { background: var(--accent-2); }
+  .socials { display: flex; gap: 22px; margin-top: 34px; font-size: 13px; color: var(--muted); }
+  .socials a:hover { color: var(--accent); }
+
+  .idcard { padding: 26px; border-radius: 22px; background: linear-gradient(160deg, rgba(255,255,255,.06), rgba(255,255,255,.015)); border: 1px solid var(--border);
+    backdrop-filter: blur(18px); box-shadow: 0 40px 80px -40px rgba(0,0,0,.9); position: relative; animation: float 7s ease-in-out infinite; }
+  @keyframes float { 50% { transform: translateY(-10px); } }
+  .idcard::before { content: ""; position: absolute; inset: -1px; border-radius: 22px; padding: 1px; pointer-events: none;
+    background: linear-gradient(140deg, rgba(249,115,22,.7), transparent 40%, transparent 70%, rgba(59,130,246,.5));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+  .idtop { display: flex; align-items: center; gap: 16px; }
+  .avatar { width: 64px; height: 64px; border-radius: 18px; display: grid; place-items: center; font-weight: 800; font-size: 24px; color: #0a0a0a;
+    background: linear-gradient(135deg, var(--accent-2), #f43f5e); letter-spacing: -.04em; }
+  .idtop b { display: block; font-size: 18px; } .idtop span { font-size: 13px; color: var(--muted); }
+  .idrows { margin-top: 22px; display: grid; gap: 10px; font-family: var(--mono); font-size: 12.5px; }
+  .idrows div { display: flex; justify-content: space-between; gap: 12px; padding: 10px 12px; border-radius: 10px; background: rgba(0,0,0,.28); border: 1px solid var(--border); }
+  .idrows em { font-style: normal; color: var(--muted); } .idrows span { color: var(--text); text-align: right; }
+  .idrows .on { color: var(--green); }
+  .scrollhint { position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%); width: 22px; height: 36px; border: 1.5px solid var(--border); border-radius: 12px; }
+  .scrollhint::after { content: ""; position: absolute; left: 50%; top: 7px; width: 3px; height: 7px; margin-left: -1.5px; border-radius: 2px; background: var(--accent); animation: sc 1.8s infinite; }
+  @keyframes sc { 60% { transform: translateY(12px); opacity: 0; } }
+
+  /* marquee */
+  .marquee { border-block: 1px solid var(--border); overflow: hidden; padding: 18px 0; margin-top: 10px;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); }
+  .track { display: flex; gap: 48px; width: max-content; animation: mq 38s linear infinite; font-family: var(--mono); font-size: 14px; color: var(--muted); }
+  .track span::before { content: "✦"; color: var(--accent); margin-right: 48px; }
+  @keyframes mq { to { transform: translateX(-50%); } }
+
+  /* about */
+  .about { display: grid; grid-template-columns: 1.5fr 1fr; gap: 40px; align-items: start; }
+  .about .big { font-size: clamp(20px, 2.6vw, 27px); line-height: 1.4; letter-spacing: -.015em; color: #e6e7ea; font-weight: 500; }
+  .about .big mark { background: none; color: var(--accent); }
+  .about p.rest { color: var(--muted); margin-top: 20px; }
+  .stats { display: grid; gap: 14px; }
+  .stat { padding: 20px 22px; display: flex; align-items: baseline; gap: 16px; }
+  .stat b { font-size: 34px; letter-spacing: -.03em; color: var(--accent); min-width: 84px; } .stat span { color: var(--muted); font-size: 14px; }
+
+  /* experience */
+  .job { padding: 26px 28px; display: grid; grid-template-columns: 170px 1fr; gap: 24px; margin-bottom: 16px; }
+  .job .when { font-family: var(--mono); font-size: 13px; color: var(--accent); padding-top: 3px; }
+  .job h3 { font-size: 20px; letter-spacing: -.01em; } .job .co { color: var(--muted); font-size: 14px; margin: 3px 0 12px; }
+  .job p { color: #c4c7ce; font-size: 15px; } .job ul { margin: 12px 0 0 18px; color: var(--muted); font-size: 14px; } .job li { margin-bottom: 4px; }
+  .job .chips { margin-top: 16px; }
+
+  /* projects */
+  .featured { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .others { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 18px; }
+  .proj { padding: 28px; cursor: pointer; display: flex; flex-direction: column; text-align: left; font: inherit; color: inherit; }
+  .proj:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .proj .no { font-family: var(--mono); font-size: 12px; color: var(--muted); display: flex; justify-content: space-between; }
+  .proj .no i { font-style: normal; color: var(--accent); }
+  .proj h3 { margin: 18px 0 10px; font-size: 22px; letter-spacing: -.02em; }
+  .others .proj { padding: 22px; } .others .proj h3 { font-size: 17px; margin-top: 12px; }
   .proj p { color: var(--muted); font-size: 14px; flex: 1; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
-  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
-  .chip { font-size: 12px; padding: 3px 10px; border-radius: 99px; background: var(--bg-2); border: 1px solid var(--line); color: #c4c7ce; }
-  .skills { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  .box { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
-  .box h3 { font-size: 13px; font-family: var(--mono); color: var(--accent); margin-bottom: 12px; font-weight: 500; }
-  .box li { list-style: none; color: #c4c7ce; font-size: 14px; padding: 4px 0; }
-  .box li::before { content: "› "; color: var(--accent); }
-  .biz { border: 1px solid var(--line); border-radius: 16px; padding: 34px; background: linear-gradient(160deg, var(--card), #0e0f12); }
-  .biz h3 { font-size: 24px; } .biz .tag { color: var(--accent); margin: 6px 0 14px; }
-  .biz > p { color: #c4c7ce; max-width: 640px; }
-  .mini { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 26px; }
-  .mini div { border-top: 1px solid var(--line); padding-top: 12px; }
-  .mini b { font-size: 14px; display: block; } .mini span { font-size: 13px; color: var(--muted); }
-  .product { margin-top: 26px; padding: 16px 18px; border: 1px dashed var(--accent); border-radius: 12px; }
-  .product small { font-family: var(--mono); color: var(--accent); }
-  .product b { display: block; margin: 2px 0 4px; } .product span { color: var(--muted); font-size: 14px; }
-  .vals { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
-  .contact a.row { display: flex; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid var(--line); transition: .2s; }
-  .contact a.row:hover { color: var(--accent); padding-left: 8px; }
-  .contact a.row span { color: var(--muted); font-size: 14px; }
-  footer { margin-top: 90px; padding: 30px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
-  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  .others .proj p { -webkit-line-clamp: 3; }
+  .more { margin-top: 20px; font-size: 13px; color: var(--accent); display: inline-flex; gap: 6px; transition: gap .2s; }
+  .proj:hover .more { gap: 12px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 18px; }
+  .chip { font-size: 12px; padding: 4px 11px; border-radius: 99px; background: rgba(255,255,255,.04); border: 1px solid var(--border); color: #c4c7ce; }
+
+  /* skills */
+  .skills { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .box { padding: 26px; } .box h3 { font-family: var(--mono); font-weight: 500; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
+  .box ul { list-style: none; display: grid; gap: 10px; } .box li { color: #d2d5db; font-size: 14.5px; display: flex; gap: 10px; }
+  .box li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); margin-top: 8px; flex: none; opacity: .8; }
+  .edu { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 18px; }
+  .edu .spot { padding: 22px 26px; } .edu small { font-family: var(--mono); font-size: 12px; color: var(--accent); }
+  .edu b { display: block; font-size: 16px; margin: 6px 0 2px; letter-spacing: -.01em; } .edu span { color: var(--muted); font-size: 14px; }
+
+  /* company */
+  .biz { padding: 44px; background: linear-gradient(150deg, rgba(249,115,22,.10), rgba(255,255,255,.02) 45%, rgba(59,130,246,.07)); border-radius: 26px; }
+  .biz .top { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; align-items: flex-start; }
+  .biz h3 { font-size: clamp(28px, 4vw, 40px); letter-spacing: -.035em; } .biz .tag { color: var(--accent); font-size: 17px; margin-top: 4px; }
+  .biz .blurb { color: #c4c7ce; max-width: 620px; margin-top: 18px; font-size: 16px; }
+  .mini { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 32px; }
+  .mini div { padding: 20px; border-radius: 14px; background: rgba(0,0,0,.28); border: 1px solid var(--border); }
+  .mini b { display: block; margin-bottom: 6px; } .mini span { font-size: 14px; color: var(--muted); }
+  .product { margin-top: 18px; padding: 22px; border-radius: 14px; border: 1px dashed rgba(249,115,22,.6); display: flex; gap: 18px; align-items: center; flex-wrap: wrap; justify-content: space-between; }
+  .product small { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+  .product b { display: block; font-size: 19px; margin: 4px 0; } .product span { color: var(--muted); font-size: 14px; max-width: 560px; display: block; }
+  .vals { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 18px; }
+  .vals div { font-size: 13px; color: var(--muted); padding-top: 12px; border-top: 1px solid var(--border); } .vals b { display: block; color: var(--text); font-size: 14px; }
+
+  /* contact */
+  .cta { text-align: center; padding: 20px 0 10px; }
+  .cta h2 { font-size: clamp(36px, 7vw, 76px); letter-spacing: -.045em; line-height: 1; margin-bottom: 26px; }
+  .mail { display: inline-block; font-size: clamp(16px, 3vw, 26px); font-weight: 600; border-bottom: 2px solid var(--accent); padding-bottom: 4px; transition: .2s; word-break: break-all; }
+  .mail:hover { color: var(--accent); }
+  .cta .btns { justify-content: center; margin-top: 34px; }
+  footer { margin-top: 100px; padding: 28px 0 40px; border-top: 1px solid var(--border); color: var(--muted); font-size: 13px; }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; } footer a:hover { color: var(--accent); }
+
   /* modal */
-  .modal { position: fixed; inset: 0; background: rgba(0,0,0,.7); display: none; place-items: center; padding: 20px; z-index: 50; }
-  .modal.open { display: grid; }
-  .sheet { background: var(--card); border: 1px solid var(--line); border-radius: 16px; max-width: 640px; width: 100%; max-height: 85vh; overflow: auto; padding: 30px; position: relative; }
-  .sheet h3 { font-size: 24px; margin: 4px 0 4px; } .sheet .role { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
-  .sheet p { color: #c4c7ce; } .sheet ul { margin: 14px 0 0 18px; color: #c4c7ce; } .sheet li { margin-bottom: 8px; }
-  .x { position: absolute; right: 16px; top: 12px; background: none; border: 0; color: var(--muted); font-size: 26px; cursor: pointer; }
-  .reveal { opacity: 0; transform: translateY(14px); transition: .6s; } .reveal.in { opacity: 1; transform: none; }
-  @media (max-width: 700px) {
-    .grid, .skills, .mini, .stats { grid-template-columns: 1fr; }
-    .links { gap: 16px; overflow-x: auto; white-space: nowrap; scrollbar-width: none; margin-left: 16px; }
-    .links::-webkit-scrollbar { display: none; }
-    .wrap { padding: 0 18px; } section { padding-top: 64px; } .hero { padding-top: 70px; }
-    .biz { padding: 22px; } .sheet { padding: 22px; }
+  .modal { position: fixed; inset: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(8px); display: none; place-items: center; padding: 20px; z-index: 50; }
+  .modal.open { display: grid; animation: fade .2s; } @keyframes fade { from { opacity: 0; } }
+  .sheet { background: #121317; border: 1px solid var(--border); border-radius: 22px; max-width: 680px; width: 100%; max-height: 86vh; overflow: auto; padding: 34px; position: relative; animation: pop .25s; }
+  @keyframes pop { from { transform: translateY(14px) scale(.98); opacity: 0; } }
+  .sheet h3 { font-size: 28px; letter-spacing: -.03em; margin: 8px 0 4px; } .sheet .rl { color: var(--muted); font-size: 14px; margin-bottom: 18px; }
+  .sheet p { color: #c4c7ce; } .sheet h4 { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin: 22px 0 10px; font-weight: 500; }
+  .sheet ul { margin-left: 18px; color: #c4c7ce; font-size: 15px; } .sheet li { margin-bottom: 9px; }
+  .x { position: absolute; right: 18px; top: 14px; background: rgba(255,255,255,.06); border: 0; color: var(--muted); width: 34px; height: 34px; border-radius: 50%; font-size: 20px; cursor: pointer; }
+  .x:hover { color: #fff; }
+
+  .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s ease, transform .7s ease; } .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } .reveal { opacity: 1; transform: none; } }
+
+  @media (max-width: 960px) {
+    .hero .wrap { grid-template-columns: 1fr; gap: 40px; } .idcard { max-width: 440px; animation: none; }
+    .about { grid-template-columns: 1fr; } .stats { grid-template-columns: repeat(3, 1fr); } .stat { flex-direction: column; gap: 2px; } .stat b { min-width: 0; font-size: 28px; }
+    .others { grid-template-columns: 1fr 1fr; } .skills { grid-template-columns: 1fr 1fr; } .vals { grid-template-columns: 1fr 1fr; }
+    .scrollhint { display: none; }
   }
-  @media (min-width: 701px) and (max-width: 960px) { .skills { grid-template-columns: 1fr 1fr; } .links { gap: 14px; } }
-  @media (max-width: 420px) { .logo { display: none; } .links { margin-left: 0; } }
+  @media (max-width: 700px) {
+    .wrap { padding: 0 18px; } section { padding-top: 80px; } .hero { padding-top: 100px; }
+    .featured, .others, .skills, .edu, .mini { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: 1fr; } .stat { flex-direction: row; gap: 14px; align-items: baseline; }
+    .job { grid-template-columns: 1fr; gap: 6px; padding: 22px; } .biz { padding: 24px; } .sheet { padding: 24px; }
+    nav .logo { display: none; } nav { padding: 5px; }
+  }
 </style>
 </head>
 <body>
-<nav><div class="wrap">
-  <a class="logo" href="#top">vaisakh<span>.</span></a>
-  <div class="links">
-    <a href="#about">About</a><a href="#experience">Experience</a><a href="#projects">Projects</a>
-    <a href="#skills">Skills</a><a href="#company">theblackit</a><a href="#contact">Contact</a>
-    <a class="term" href="terminal.html" title="Switch to terminal mode">&gt;_ terminal</a>
-  </div>
-</div></nav>
+<div class="ambient"></div>
 
-<main class="wrap" id="top">
-  <section class="hero">
-    <h1>Hi, I'm <em>Vaisakh</em>.<br>I build interfaces<br>that scale.</h1>
-    <p class="lead" id="lead"></p>
-    <div class="btns">
-      <a class="btn primary" href="#projects">View my work</a>
-      <a class="btn" href="#contact">Get in touch</a>
+<nav>
+  <a class="logo" href="#top">vaisakh<span>.</span></a>
+  <div class="links" id="navlinks">
+    <a class="l" href="#about">About</a><a class="l" href="#experience">Experience</a><a class="l" href="#projects">Projects</a>
+    <a class="l" href="#skills">Skills</a><a class="l" href="#company">theblackit</a><a class="l" href="#contact">Contact</a>
+  </div>
+  <a class="term" href="terminal.html" title="Switch to terminal mode">&gt;_ terminal</a>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <div class="hello"><b>&lt;/&gt;</b> hello, world — I'm</div>
+      <h1><span class="grad">Vaisakh K</span></h1>
+      <div class="role"><span id="typed"></span><span class="cur"></span></div>
+      <p class="lead" id="lead"></p>
+      <div class="btns">
+        <a class="btn primary" href="#projects">View my work →</a>
+        <a class="btn" href="#contact">Get in touch</a>
+      </div>
+      <div class="socials" id="socials"></div>
+    </div>
+    <aside class="idcard" aria-label="Profile summary">
+      <div class="idtop"><div class="avatar">VK</div><div><b>Vaisakh K</b><span id="idrole"></span></div></div>
+      <div class="idrows" id="idrows"></div>
+    </aside>
+  </div>
+  <div class="scrollhint"></div>
+</header>
+
+<div class="marquee"><div class="track" id="track"></div></div>
+
+<main class="wrap">
+  <section id="about" class="reveal">
+    <div class="eyebrow">About</div>
+    <div class="about">
+      <div>
+        <p class="big" id="big"></p>
+        <p class="rest" id="rest"></p>
+      </div>
+      <div class="stats" id="stats"></div>
     </div>
   </section>
 
-  <section id="about" class="about reveal">
-    <div class="label">01 / about</div><h2>About me</h2>
-    <div id="about-text"></div>
-    <div class="stats" id="stats"></div>
-  </section>
-
   <section id="experience" class="reveal">
-    <div class="label">02 / experience</div><h2>Where I've worked</h2>
-    <div class="tl" id="exp"></div>
+    <div class="eyebrow">Experience</div><h2>Where I've <span class="grad">worked</span></h2>
+    <div id="exp"></div>
   </section>
 
   <section id="projects" class="reveal">
-    <div class="label">03 / projects</div><h2>Things I've built</h2>
-    <div class="grid" id="projs"></div>
+    <div class="eyebrow">Projects</div><h2>Things I've <span class="grad">built</span></h2>
+    <div class="featured" id="featured"></div>
+    <div class="others" id="others"></div>
   </section>
 
   <section id="skills" class="reveal">
-    <div class="label">04 / skills</div><h2>Skills &amp; abilities</h2>
+    <div class="eyebrow">Skills</div><h2>What I <span class="grad">work with</span></h2>
     <div class="skills" id="skl"></div>
-    <h2 style="margin-top:56px">Education</h2>
-    <div class="tl" id="edu"></div>
+    <div class="edu" id="edu"></div>
   </section>
 
   <section id="company" class="reveal">
-    <div class="label">05 / venture</div><h2>Something of our own</h2>
-    <div class="biz" id="biz"></div>
+    <div class="eyebrow">Our venture</div><h2>Something of <span class="grad">our own</span></h2>
+    <div class="biz spot" id="biz"></div>
   </section>
 
-  <section id="contact" class="contact reveal">
-    <div class="label">06 / contact</div><h2>Let's talk</h2>
-    <div id="contact-rows"></div>
+  <section id="contact" class="reveal">
+    <div class="eyebrow" style="justify-content:center">Contact</div>
+    <div class="cta">
+      <h2>Let's build<br><span class="grad">something great.</span></h2>
+      <a class="mail" id="mail"></a>
+      <div class="btns" id="cbtns"></div>
+    </div>
   </section>
 </main>
 
-<footer><div class="wrap"><span>© <span id="yr"></span> Vaisakh K</span><a href="index.html">Switch mode</a></div></footer>
+<footer><div class="wrap"><span>© <span id="yr"></span> Vaisakh K · Kerala, India</span><span><a href="terminal.html">Terminal mode</a> · <a href="index.html">Switch mode</a></span></div></footer>
 
-<div class="modal" id="modal"><div class="sheet" id="sheet"></div></div>
+<div class="modal" id="modal" role="dialog" aria-modal="true"><div class="sheet" id="sheet"></div></div>
 
 <script src="data.js"></script>
 <script>
-const D = DATA, $ = id => document.getElementById(id);
+const D = DATA, C = D.company, $ = id => document.getElementById(id);
 const chips = a => `<div class="chips">${a.map(t => `<span class="chip">${t}</span>`).join("")}</div>`;
 
-$("lead").textContent = `${D.title} with 4 years of experience in React & TypeScript — component libraries, data-rich dashboards and enterprise-grade apps. Based in ${D.location}.`;
-$("about-text").innerHTML = D.about.map(p => `<p>${p}</p>`).join("");
-$("stats").innerHTML = D.stats.map(s => `<div class="stat"><b>${s.value}</b><span>${s.label}</span></div>`).join("");
+// hero
+$("lead").textContent = `${D.title} with 4 years of experience crafting scalable component libraries, data-rich dashboards and enterprise-grade React apps.`;
+$("idrole").textContent = D.title;
+$("idrows").innerHTML = [
+  ["status", `<span class="on">● working at dbiz.ai</span>`], ["focus", "React · TypeScript"], ["also", "Node.js · MongoDB"],
+  ["venture", "theblackit"], ["base", D.location],
+].map(([k, v]) => `<div><em>${k}</em><span>${v}</span></div>`).join("");
+$("socials").innerHTML = `<a href="${D.github}" target="_blank" rel="noopener">GitHub ↗</a><a href="${D.linkedin}" target="_blank" rel="noopener">LinkedIn ↗</a><a href="mailto:${D.email}">Email ↗</a>`;
 
+// typing role
+const roles = ["Senior Software Engineer", "React & TypeScript expert", "Front-end architect", "Co-founder at theblackit"];
+(function type(i = 0, j = 0, del = false) {
+  const el = $("typed"), word = roles[i];
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) { el.textContent = roles[0]; return; }
+  el.textContent = word.slice(0, j);
+  let t = del ? 35 : 70;
+  if (!del && j === word.length) { del = true; t = 1700; }
+  else if (del && j === 0) { del = false; i = (i + 1) % roles.length; t = 350; }
+  setTimeout(() => type(i, j + (del ? -1 : 1), del), t);
+})();
+
+// marquee
+const stack = ["React", "TypeScript", "Highcharts", "JavaScript ES6+", "Component Libraries", "Dashboard Theming", "REST APIs", "Node.js", "MongoDB", "Performance", "Agile / Scrum", "Git"];
+$("track").innerHTML = [...stack, ...stack].map(s => `<span>${s}</span>`).join("");
+
+// about
+$("big").innerHTML = D.about[0].replace("React and TypeScript", "<mark>React and TypeScript</mark>");
+$("rest").textContent = D.about.slice(1).join(" ");
+$("stats").innerHTML = D.stats.map(s => `<div class="stat spot"><b>${s.value}</b><span>${s.label}</span></div>`).join("");
+
+// experience
 $("exp").innerHTML = D.experience.map(j => `
-  <div class="job"><h3>${j.role}</h3>
-    <div class="meta">${j.company} · ${j.period}</div>
-    <p>${j.summary}</p>
+  <div class="job spot"><div class="when">${j.period}</div>
+    <div><h3>${j.role}</h3><div class="co">${j.company}</div><p>${j.summary}</p>
     ${j.points.length ? `<ul>${j.points.map(p => `<li>${p}</li>`).join("")}</ul>` : ""}
+    ${j.projects.length ? chips(j.projects.map(id => D.projects.find(p => p.id === id).name)) : ""}</div>
   </div>`).join("");
 
-$("projs").innerHTML = D.projects.map(p => `
-  <article class="proj" data-id="${p.id}" tabindex="0">
-    <span class="kind">${p.kind}</span><h3>${p.name}</h3><p>${p.description}</p>${chips(p.tech.slice(0, 4))}
-  </article>`).join("");
+// projects
+const card = (p, i, feat) => `
+  <button class="proj spot" data-id="${p.id}" data-cursor="View">
+    <div class="no"><span>${String(i + 1).padStart(2, "0")}</span><i>${p.kind}</i></div>
+    <h3>${p.name}</h3><p>${p.description}</p>${chips(p.tech.slice(0, feat ? 5 : 3))}
+    <span class="more">View details <b>→</b></span>
+  </button>`;
+const prof = D.projects.filter(p => p.kind.startsWith("Professional")), rest = D.projects.filter(p => !p.kind.startsWith("Professional"));
+$("featured").innerHTML = prof.map((p, i) => card(p, i, true)).join("");
+$("others").innerHTML = rest.map((p, i) => card(p, i + prof.length, false)).join("");
 
-$("skl").innerHTML = [["frontend", "// front-end"], ["backend", "// back-end"], ["practices", "// practices"]]
-  .map(([k, t]) => `<div class="box"><h3>${t}</h3><ul>${D.skills[k].map(s => `<li>${s}</li>`).join("")}</ul></div>`).join("");
+// skills + education
+$("skl").innerHTML = [["frontend", "Front-end"], ["backend", "Back-end"], ["practices", "Practices"]]
+  .map(([k, t]) => `<div class="box spot"><h3>${t}</h3><ul>${D.skills[k].map(s => `<li>${s}</li>`).join("")}</ul></div>`).join("");
+$("edu").innerHTML = D.education.map(e => `<div class="spot"><small>${e.period}</small><b>${e.title}</b><span>${e.place}</span></div>`).join("");
 
-$("edu").innerHTML = D.education.map(e => `<div class="job"><h3>${e.title}</h3><div class="meta">${e.place} · ${e.period}</div></div>`).join("");
-
-const C = D.company;
+// company
 $("biz").innerHTML = `
-  <h3>${C.name}</h3><div class="tag">${C.tagline}</div><p>${C.blurb}</p>
+  <div class="top"><div><h3>${C.name}</h3><div class="tag">${C.tagline}</div></div>
+    <a class="btn primary" href="${C.url}" target="_blank" rel="noopener">Visit theblackit.com ↗</a></div>
+  <p class="blurb">${C.blurb}</p>
   <div class="mini">${C.focus.map(f => `<div><b>${f.title}</b><span>${f.text}</span></div>`).join("")}</div>
-  ${C.products.map(p => `<div class="product"><small>${p.status}</small><b>${p.name}</b><span>${p.text}</span></div>`).join("")}
-  <div class="vals">${C.values.map(v => `<span class="chip"><b>${v.title}</b> — ${v.text}</span>`).join("")}</div>
-  <div class="btns" style="margin-top:26px"><a class="btn primary" href="${C.url}" target="_blank" rel="noopener">Visit theblackit.com</a><a class="btn" href="mailto:${C.email}">${C.email}</a></div>`;
+  ${C.products.map(p => `<div class="product"><div><small>${p.status}</small><b>${p.name}</b><span>${p.text}</span></div></div>`).join("")}
+  <div class="vals">${C.values.map(v => `<div><b>${v.title}</b>${v.text}</div>`).join("")}</div>`;
 
-$("contact-rows").innerHTML = [
-  ["Email", D.email, "mailto:" + D.email], ["GitHub", "github.com/ckvaizz", D.github],
-  ["LinkedIn", "vaisakh-k", D.linkedin], ["Location", D.location, "#contact"],
-].map(([a, b, h]) => `<a class="row" href="${h}" ${h.startsWith("http") ? 'target="_blank" rel="noopener"' : ""}>${a}<span>${b}</span></a>`).join("");
+// contact
+$("mail").textContent = D.email; $("mail").href = "mailto:" + D.email;
+$("cbtns").innerHTML = `<a class="btn primary" href="mailto:${D.email}">Send an email</a>
+  <a class="btn" href="${D.linkedin}" target="_blank" rel="noopener">LinkedIn ↗</a><a class="btn" href="${D.github}" target="_blank" rel="noopener">GitHub ↗</a>`;
 $("yr").textContent = new Date().getFullYear();
 
-// project modal
+// modal
 const modal = $("modal"), sheet = $("sheet");
 function openProj(id) {
   const p = D.projects.find(x => x.id === id);
   sheet.innerHTML = `<button class="x" aria-label="Close">×</button>
-    <span class="label">${p.kind}</span><h3>${p.name}</h3><div class="role">${p.role}</div>
-    <p>${p.description}</p><ul>${p.points.map(x => `<li>${x}</li>`).join("")}</ul>${chips(p.tech)}`;
-  modal.classList.add("open");
+    <span class="eyebrow">${p.kind}</span><h3>${p.name}</h3><div class="rl">${p.role}</div>
+    <p>${p.description}</p><h4>Responsibilities</h4><ul>${p.points.map(x => `<li>${x}</li>`).join("")}</ul>
+    <h4>Tech</h4>${chips(p.tech)}`;
+  modal.classList.add("open"); document.body.style.overflow = "hidden";
 }
-$("projs").addEventListener("click", e => { const c = e.target.closest(".proj"); if (c) openProj(c.dataset.id); });
-$("projs").addEventListener("keydown", e => { if (e.key === "Enter") { const c = e.target.closest(".proj"); if (c) openProj(c.dataset.id); } });
-modal.addEventListener("click", e => { if (e.target === modal || e.target.classList.contains("x")) modal.classList.remove("open"); });
-addEventListener("keydown", e => { if (e.key === "Escape") modal.classList.remove("open"); });
+const closeM = () => { modal.classList.remove("open"); document.body.style.overflow = ""; };
+document.addEventListener("click", e => { const c = e.target.closest(".proj"); if (c) openProj(c.dataset.id); });
+modal.addEventListener("click", e => { if (e.target === modal || e.target.classList.contains("x")) closeM(); });
+addEventListener("keydown", e => { if (e.key === "Escape") closeM(); });
 
-// reveal on scroll
+// spotlight follow
+document.addEventListener("pointermove", e => {
+  const el = e.target.closest && e.target.closest(".spot"); if (!el) return;
+  const r = el.getBoundingClientRect(); el.style.setProperty("--mx", e.clientX - r.left + "px"); el.style.setProperty("--my", e.clientY - r.top + "px");
+});
+
+// reveal + active nav
 const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: .08 });
 document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+const links = [...document.querySelectorAll("nav a.l")];
+const so = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) links.forEach(l => {
+  const on = l.getAttribute("href") === "#" + e.target.id; l.classList.toggle("on", on);
+  if (on) l.scrollIntoView({ block: "nearest", inline: "center" }); }); }), { rootMargin: "-45% 0px -50% 0px" });
+document.querySelectorAll("main section").forEach(s => so.observe(s));
 </script>
+<script src="space.js"></script>
+<script src="cursor.js"></script>
 </body>
 </html>

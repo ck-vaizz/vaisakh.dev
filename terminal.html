@@ -94,7 +94,7 @@
 <section class="win">
   <div class="frame">
     <div class="bar"><i></i><i></i><i></i><span id="title">guest@vaisakh: ~</span></div>
-    <div id="screen"><div id="out"></div>
+    <div id="screen" data-cursor="text"><div id="out"></div>
       <div class="row"><span class="ps" id="ps"></span><input id="in" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="terminal input" autofocus></div>
     </div>
     <div class="chipbar" id="chips">
@@ -393,5 +393,7 @@ refreshPrompt();
  "Start with <span class='ok'>cat README.md</span>.", ""].forEach(l => print(l));
 input.focus();
 </script>
+<script src="space.js"></script>
+<script src="cursor.js"></script>
 </body>
 </html>
