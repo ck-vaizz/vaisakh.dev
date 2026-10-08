@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vaisakh K — Senior Software Engineer</title>
+<meta name="description" content="Vaisakh K — Senior Software Engineer specializing in React and TypeScript.">
+<link rel="stylesheet" href="style.css">
+<style>
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+  section[id] { scroll-margin-top: 50px; }
+  nav { position: sticky; top: 0; z-index: 10; background: rgba(10,11,13,.85); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  .logo { font-weight: 700; }
+  .logo span { color: var(--accent); }
+  .links { display: flex; gap: 22px; font-size: 14px; color: var(--muted); align-items: center; }
+  .links a:hover { color: var(--text); }
+  .links .term { font-family: var(--mono); color: var(--accent); border: 1px solid var(--line); padding: 4px 10px; border-radius: 6px; }
+  .links .term:hover { border-color: var(--accent); color: var(--accent); }
+  section { padding: 84px 0 0; }
+  .label { font-family: var(--mono); font-size: 13px; color: var(--accent); margin-bottom: 8px; }
+  h2 { font-size: 28px; letter-spacing: -.01em; margin-bottom: 28px; }
+  .hero { padding-top: 110px; }
+  .hero h1 { font-size: clamp(40px, 8vw, 72px); line-height: 1.05; letter-spacing: -.03em; }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .hero p.lead { color: var(--muted); font-size: 19px; max-width: 600px; margin: 22px 0 30px; }
+  .badge { display: inline-flex; gap: 8px; align-items: center; font-size: 13px; color: var(--muted); border: 1px solid var(--line); border-radius: 99px; padding: 5px 14px; margin-bottom: 22px; }
+  .badge i { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); }
+  .btns { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn { padding: 10px 20px; border-radius: 8px; border: 1px solid var(--line); font-size: 14px; transition: .2s; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #000; font-weight: 600; }
+  .btn:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .about p { color: #c4c7ce; margin-bottom: 14px; max-width: 720px; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 30px; }
+  .stat { border: 1px solid var(--line); border-radius: 12px; padding: 18px; background: var(--card); }
+  .stat b { display: block; font-size: 26px; color: var(--accent); }
+  .stat span { font-size: 13px; color: var(--muted); }
+  .tl { border-left: 1px solid var(--line); margin-left: 6px; }
+  .job { position: relative; padding: 0 0 34px 28px; }
+  .job::before { content: ""; position: absolute; left: -5px; top: 8px; width: 9px; height: 9px; border-radius: 50%; background: var(--accent); }
+  .job h3 { font-size: 18px; }
+  .job .meta { color: var(--muted); font-size: 14px; margin: 2px 0 10px; }
+  .job p { color: #c4c7ce; }
+  .job ul { margin: 10px 0 0 18px; color: #c4c7ce; }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .proj { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px; cursor: pointer; transition: .2s; display: flex; flex-direction: column; }
+  .proj:hover { border-color: var(--accent); transform: translateY(-3px); }
+  .proj .kind { font-family: var(--mono); font-size: 12px; color: var(--accent); }
+  .proj h3 { margin: 6px 0 8px; font-size: 19px; }
+  .proj p { color: var(--muted); font-size: 14px; flex: 1; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+  .chip { font-size: 12px; padding: 3px 10px; border-radius: 99px; background: var(--bg-2); border: 1px solid var(--line); color: #c4c7ce; }
+  .skills { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .box { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+  .box h3 { font-size: 13px; font-family: var(--mono); color: var(--accent); margin-bottom: 12px; font-weight: 500; }
+  .box li { list-style: none; color: #c4c7ce; font-size: 14px; padding: 4px 0; }
+  .box li::before { content: "› "; color: var(--accent); }
+  .biz { border: 1px solid var(--line); border-radius: 16px; padding: 34px; background: linear-gradient(160deg, var(--card), #0e0f12); }
+  .biz h3 { font-size: 24px; } .biz .tag { color: var(--accent); margin: 6px 0 14px; }
+  .biz > p { color: #c4c7ce; max-width: 640px; }
+  .mini { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 26px; }
+  .mini div { border-top: 1px solid var(--line); padding-top: 12px; }
+  .mini b { font-size: 14px; display: block; } .mini span { font-size: 13px; color: var(--muted); }
+  .product { margin-top: 26px; padding: 16px 18px; border: 1px dashed var(--accent); border-radius: 12px; }
+  .product small { font-family: var(--mono); color: var(--accent); }
+  .product b { display: block; margin: 2px 0 4px; } .product span { color: var(--muted); font-size: 14px; }
+  .vals { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+  .contact a.row { display: flex; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid var(--line); transition: .2s; }
+  .contact a.row:hover { color: var(--accent); padding-left: 8px; }
+  .contact a.row span { color: var(--muted); font-size: 14px; }
+  footer { margin-top: 90px; padding: 30px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  /* modal */
+  .modal { position: fixed; inset: 0; background: rgba(0,0,0,.7); display: none; place-items: center; padding: 20px; z-index: 50; }
+  .modal.open { display: grid; }
+  .sheet { background: var(--card); border: 1px solid var(--line); border-radius: 16px; max-width: 640px; width: 100%; max-height: 85vh; overflow: auto; padding: 30px; position: relative; }
+  .sheet h3 { font-size: 24px; margin: 4px 0 4px; } .sheet .role { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
+  .sheet p { color: #c4c7ce; } .sheet ul { margin: 14px 0 0 18px; color: #c4c7ce; } .sheet li { margin-bottom: 8px; }
+  .x { position: absolute; right: 16px; top: 12px; background: none; border: 0; color: var(--muted); font-size: 26px; cursor: pointer; }
+  .reveal { opacity: 0; transform: translateY(14px); transition: .6s; } .reveal.in { opacity: 1; transform: none; }
+  @media (max-width: 700px) {
+    .grid, .skills, .mini, .stats { grid-template-columns: 1fr; }
+    .links { gap: 16px; overflow-x: auto; white-space: nowrap; scrollbar-width: none; margin-left: 16px; }
+    .links::-webkit-scrollbar { display: none; }
+    .wrap { padding: 0 18px; } section { padding-top: 64px; } .hero { padding-top: 70px; }
+    .biz { padding: 22px; } .sheet { padding: 22px; }
+  }
+  @media (min-width: 701px) and (max-width: 960px) { .skills { grid-template-columns: 1fr 1fr; } .links { gap: 14px; } }
+  @media (max-width: 420px) { .logo { display: none; } .links { margin-left: 0; } }
+</style>
+</head>
+<body>
+<nav><div class="wrap">
+  <a class="logo" href="#top">vaisakh<span>.</span></a>
+  <div class="links">
+    <a href="#about">About</a><a href="#experience">Experience</a><a href="#projects">Projects</a>
+    <a href="#skills">Skills</a><a href="#company">theblackit</a><a href="#contact">Contact</a>
+    <a class="term" href="terminal.html" title="Switch to terminal mode">&gt;_ terminal</a>
+  </div>
+</div></nav>
+
+<main class="wrap" id="top">
+  <section class="hero">
+    <h1>Hi, I'm <em>Vaisakh</em>.<br>I build interfaces<br>that scale.</h1>
+    <p class="lead" id="lead"></p>
+    <div class="btns">
+      <a class="btn primary" href="#projects">View my work</a>
+      <a class="btn" href="#contact">Get in touch</a>
+    </div>
+  </section>
+
+  <section id="about" class="about reveal">
+    <div class="label">01 / about</div><h2>About me</h2>
+    <div id="about-text"></div>
+    <div class="stats" id="stats"></div>
+  </section>
+
+  <section id="experience" class="reveal">
+    <div class="label">02 / experience</div><h2>Where I've worked</h2>
+    <div class="tl" id="exp"></div>
+  </section>
+
+  <section id="projects" class="reveal">
+    <div class="label">03 / projects</div><h2>Things I've built</h2>
+    <div class="grid" id="projs"></div>
+  </section>
+
+  <section id="skills" class="reveal">
+    <div class="label">04 / skills</div><h2>Skills &amp; abilities</h2>
+    <div class="skills" id="skl"></div>
+    <h2 style="margin-top:56px">Education</h2>
+    <div class="tl" id="edu"></div>
+  </section>
+
+  <section id="company" class="reveal">
+    <div class="label">05 / venture</div><h2>Something of our own</h2>
+    <div class="biz" id="biz"></div>
+  </section>
+
+  <section id="contact" class="contact reveal">
+    <div class="label">06 / contact</div><h2>Let's talk</h2>
+    <div id="contact-rows"></div>
+  </section>
+</main>
+
+<footer><div class="wrap"><span>© <span id="yr"></span> Vaisakh K</span><a href="index.html">Switch mode</a></div></footer>
+
+<div class="modal" id="modal"><div class="sheet" id="sheet"></div></div>
+
+<script src="data.js"></script>
+<script>
+const D = DATA, $ = id => document.getElementById(id);
+const chips = a => `<div class="chips">${a.map(t => `<span class="chip">${t}</span>`).join("")}</div>`;
+
+$("lead").textContent = `${D.title} with 4 years of experience in React & TypeScript — component libraries, data-rich dashboards and enterprise-grade apps. Based in ${D.location}.`;
+$("about-text").innerHTML = D.about.map(p => `<p>${p}</p>`).join("");
+$("stats").innerHTML = D.stats.map(s => `<div class="stat"><b>${s.value}</b><span>${s.label}</span></div>`).join("");
+
+$("exp").innerHTML = D.experience.map(j => `
+  <div class="job"><h3>${j.role}</h3>
+    <div class="meta">${j.company} · ${j.period}</div>
+    <p>${j.summary}</p>
+    ${j.points.length ? `<ul>${j.points.map(p => `<li>${p}</li>`).join("")}</ul>` : ""}
+  </div>`).join("");
+
+$("projs").innerHTML = D.projects.map(p => `
+  <article class="proj" data-id="${p.id}" tabindex="0">
+    <span class="kind">${p.kind}</span><h3>${p.name}</h3><p>${p.description}</p>${chips(p.tech.slice(0, 4))}
+  </article>`).join("");
+
+$("skl").innerHTML = [["frontend", "// front-end"], ["backend", "// back-end"], ["practices", "// practices"]]
+  .map(([k, t]) => `<div class="box"><h3>${t}</h3><ul>${D.skills[k].map(s => `<li>${s}</li>`).join("")}</ul></div>`).join("");
+
+$("edu").innerHTML = D.education.map(e => `<div class="job"><h3>${e.title}</h3><div class="meta">${e.place} · ${e.period}</div></div>`).join("");
+
+const C = D.company;
+$("biz").innerHTML = `
+  <h3>${C.name}</h3><div class="tag">${C.tagline}</div><p>${C.blurb}</p>
+  <div class="mini">${C.focus.map(f => `<div><b>${f.title}</b><span>${f.text}</span></div>`).join("")}</div>
+  ${C.products.map(p => `<div class="product"><small>${p.status}</small><b>${p.name}</b><span>${p.text}</span></div>`).join("")}
+  <div class="vals">${C.values.map(v => `<span class="chip"><b>${v.title}</b> — ${v.text}</span>`).join("")}</div>
+  <div class="btns" style="margin-top:26px"><a class="btn primary" href="${C.url}" target="_blank" rel="noopener">Visit theblackit.com</a><a class="btn" href="mailto:${C.email}">${C.email}</a></div>`;
+
+$("contact-rows").innerHTML = [
+  ["Email", D.email, "mailto:" + D.email], ["GitHub", "github.com/ckvaizz", D.github],
+  ["LinkedIn", "vaisakh-k", D.linkedin], ["Location", D.location, "#contact"],
+].map(([a, b, h]) => `<a class="row" href="${h}" ${h.startsWith("http") ? 'target="_blank" rel="noopener"' : ""}>${a}<span>${b}</span></a>`).join("");
+$("yr").textContent = new Date().getFullYear();
+
+// project modal
+const modal = $("modal"), sheet = $("sheet");
+function openProj(id) {
+  const p = D.projects.find(x => x.id === id);
+  sheet.innerHTML = `<button class="x" aria-label="Close">×</button>
+    <span class="label">${p.kind}</span><h3>${p.name}</h3><div class="role">${p.role}</div>
+    <p>${p.description}</p><ul>${p.points.map(x => `<li>${x}</li>`).join("")}</ul>${chips(p.tech)}`;
+  modal.classList.add("open");
+}
+$("projs").addEventListener("click", e => { const c = e.target.closest(".proj"); if (c) openProj(c.dataset.id); });
+$("projs").addEventListener("keydown", e => { if (e.key === "Enter") { const c = e.target.closest(".proj"); if (c) openProj(c.dataset.id); } });
+modal.addEventListener("click", e => { if (e.target === modal || e.target.classList.contains("x")) modal.classList.remove("open"); });
+addEventListener("keydown", e => { if (e.key === "Escape") modal.classList.remove("open"); });
+
+// reveal on scroll
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: .08 });
+document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+</script>
+</body>
+</html>

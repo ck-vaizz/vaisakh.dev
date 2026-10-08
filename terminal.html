@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>vaisakh@portfolio:~</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  html, body { height: 100%; overflow: hidden; }
+  body { font-family: var(--mono); display: grid; place-items: center; padding: 24px; position: relative; }
+  .bg { position: fixed; inset: 0; overflow: hidden; z-index: 0; }
+  .bg i { position: absolute; border-radius: 50%; filter: blur(110px); opacity: .55; animation: drift 18s ease-in-out infinite alternate; }
+  .bg i:nth-child(1) { width: 520px; height: 520px; background: #f97316; top: -120px; left: -80px; }
+  .bg i:nth-child(2) { width: 460px; height: 460px; background: #1d4ed8; bottom: -140px; right: -60px; animation-delay: -6s; opacity: .4; }
+  .bg i:nth-child(3) { width: 340px; height: 340px; background: #9333ea; top: 40%; left: 55%; animation-delay: -11s; opacity: .3; }
+  @keyframes drift { to { transform: translate(60px, -40px) scale(1.15); } }
+  .shell { position: relative; z-index: 1; width: min(1020px, 100%); height: min(600px, calc(100vh - 48px)); display: grid; grid-template-columns: 270px 1fr; gap: 16px;
+    padding: 16px; border-radius: 20px; background: rgba(15,17,21,.45); border: 1px solid rgba(255,255,255,.09);
+    backdrop-filter: blur(24px) saturate(140%); -webkit-backdrop-filter: blur(24px) saturate(140%); box-shadow: 0 40px 80px -30px rgba(0,0,0,.8); }
+  aside { padding: 14px 10px 10px 14px; display: flex; flex-direction: column; gap: 18px; overflow: auto; }
+  aside h1 { font-family: var(--sans); font-size: 28px; letter-spacing: -.02em; line-height: 1.1; }
+  aside .role { color: var(--accent); font-size: 14px; margin-top: 8px; }
+  aside p { color: var(--muted); font-size: 13px; font-family: var(--sans); }
+  aside h4 { font-size: 11px; letter-spacing: .12em; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; font-weight: 500; }
+  .cmds button { display: block; width: 100%; text-align: left; background: none; border: 0; color: var(--text); font: inherit; font-size: 13px;
+    padding: 5px 0; cursor: pointer; }
+  .cmds button span { color: var(--muted); } .cmds button:hover { color: var(--accent); }
+  .cmds button::before { content: "$ "; color: var(--green); }
+  aside .sw { margin-top: auto; font-size: 12px; color: var(--muted); }
+  aside .sw a { color: var(--accent); }
+  .win { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+  .frame { flex: 1; min-height: 0; display: flex; flex-direction: column; background: rgba(8,9,11,.72); border: 1px solid rgba(255,255,255,.08); border-radius: 12px; overflow: hidden; }
+  .bar { display: flex; align-items: center; gap: 7px; padding: 11px 14px; background: rgba(255,255,255,.04); border-bottom: 1px solid var(--line); }
+  .bar i { width: 11px; height: 11px; border-radius: 50%; background: #3a3d44; }
+  .bar i:nth-child(1) { background: #ff5f57; } .bar i:nth-child(2) { background: #febc2e; } .bar i:nth-child(3) { background: #28c840; }
+  .bar span { margin: 0 auto; color: var(--muted); font-size: 12px; transform: translateX(-24px); }
+  #screen { flex: 1; overflow-y: auto; padding: 16px 18px; font-size: 14px; line-height: 1.55; cursor: text; }
+  .ln { white-space: pre-wrap; word-break: break-word; min-height: 1.55em; }
+  .ps { white-space: pre; } .u { color: var(--green); } .p { color: var(--blue); } .d { color: var(--blue); cursor: pointer; font-weight: 600; }
+  .f { cursor: pointer; } .d:hover, .f:hover { text-decoration: underline; }
+  .h1 { color: var(--accent); font-weight: 700; } .h2 { color: var(--accent-2); font-weight: 600; } .dim { color: var(--muted); } .err { color: #f87171; } .ok { color: var(--green); }
+  .ln a { color: var(--blue); text-decoration: underline; }
+  .row { display: flex; align-items: center; }
+  .row .ps { flex: none; }
+  #in { flex: 1; min-width: 0; background: none; border: 0; outline: 0; color: var(--text); font: inherit; caret-color: var(--accent); margin-left: 8px; }
+  .chipbar { display: none; gap: 8px; padding: 8px 12px; border-top: 1px solid var(--line); overflow-x: auto; }
+  .chipbar button { background: var(--bg-2); border: 1px solid var(--line); border-radius: 6px; color: var(--text); font: inherit; font-size: 12px; padding: 5px 10px; white-space: nowrap; }
+  .closed { position: fixed; inset: 0; background: #000; display: grid; place-items: center; text-align: center; color: var(--muted); font-size: 14px; z-index: 9; }
+  .closed a { color: var(--accent); display: inline-block; margin: 14px 10px 0; }
+  html, body { height: 100dvh; }
+  .shell { height: min(600px, calc(100dvh - 48px)); }
+  #screen { overflow-x: auto; }
+  @media (max-width: 1000px) { .shell { grid-template-columns: 220px 1fr; } aside { padding: 8px 4px 8px 8px; } aside h1 { font-size: 24px; } }
+  @media (max-width: 860px) {
+    body { padding: 10px; }
+    .shell { grid-template-columns: 1fr; grid-template-rows: auto 1fr; gap: 8px; height: calc(100dvh - 20px); padding: 10px; border-radius: 16px; }
+    aside { padding: 4px 6px; gap: 0; overflow: visible; flex-direction: row; align-items: baseline; justify-content: space-between; flex-wrap: wrap; }
+    aside > p, aside .cmds { display: none; }
+    aside .sw { margin: 0; font-size: 11px; }
+    aside h1 { font-size: 20px; } aside .role { margin: 0; font-size: 12px; }
+    .chipbar { display: flex; }
+  }
+  @media (max-width: 520px) {
+    #screen { font-size: 12.5px; padding: 12px; }
+    #in { font-size: 16px; } /* prevents iOS zoom on focus */
+    .bar span { transform: none; margin-left: 8px; font-size: 11px; }
+    .bg i { filter: blur(80px); }
+  }
+  @media (max-height: 520px) and (orientation: landscape) { aside { display: none; } .shell { grid-template-rows: 1fr; } }
+</style>
+</head>
+<body>
+<div class="bg"><i></i><i></i><i></i></div>
+<div class="shell">
+<aside>
+  <div>
+    <h1>Vaisakh K</h1>
+    <div class="role">Senior Software Engineer</div>
+  </div>
+  <p>Welcome to my terminal. It's a tiny virtual file system — explore it the way you'd explore any machine. Click a command below or type it on the right.</p>
+  <div class="cmds">
+    <h4>Quick start</h4>
+    <button data-cmd="help">help <span>— all commands</span></button>
+    <button data-cmd="ls">ls <span>— list sections</span></button>
+    <button data-cmd="cat README.md">cat README.md</button>
+    <button data-cmd="cd projects">cd projects</button>
+    <button data-cmd="cd company">cd company <span>— theblackit</span></button>
+    <button data-cmd="neofetch">neofetch</button>
+    <button data-cmd="exit">exit</button>
+  </div>
+  <div class="sw">Prefer scrolling? <a href="normal.html">Switch to normal mode</a> · <a href="index.html">Home</a></div>
+</aside>
+
+<section class="win">
+  <div class="frame">
+    <div class="bar"><i></i><i></i><i></i><span id="title">guest@vaisakh: ~</span></div>
+    <div id="screen"><div id="out"></div>
+      <div class="row"><span class="ps" id="ps"></span><input id="in" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="terminal input" autofocus></div>
+    </div>
+    <div class="chipbar" id="chips">
+      <button data-cmd="help">help</button><button data-cmd="ls">ls</button><button data-cmd="cd ..">cd ..</button>
+      <button data-cmd="cat README.md">cat README.md</button><button data-cmd="clear">clear</button>
+    </div>
+  </div>
+</section>
+</div>
+
+<script src="data.js"></script>
+<script>
+const D = DATA;
+const $ = id => document.getElementById(id);
+const out = $("out"), input = $("in"), screen = $("screen");
+const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const wrap = (s, w = 74, ind = "") => {
+  const words = s.split(" "), lines = []; let cur = "";
+  for (const wd of words) { if ((cur + " " + wd).trim().length > w) { lines.push(cur); cur = ind + wd; } else cur = (cur ? cur + " " : "") + wd; }
+  if (cur) lines.push(cur); return lines;
+};
+
+/* ---------- virtual file system ---------- */
+const F = (content) => ({ type: "file", content });
+const Dir = (children) => ({ type: "dir", children });
+
+function projectFile(p) {
+  return [
+    "# " + p.name, p.kind + " · " + p.role, "",
+    "## DESCRIPTION", ...wrap(p.description), "",
+    "## RESPONSIBILITIES", ...p.points.flatMap(x => wrap(x, 72, "  ").map((l, i) => (i ? "" : "- ") + l)), "",
+    "## TECH", p.tech.join(", "),
+  ];
+}
+const bullets = a => a.map(x => "- " + x);
+
+const root = Dir({
+  "README.md": F([
+    "# Vaisakh K — Senior Software Engineer", D.tagline, "",
+    ...D.about.flatMap(a => [...wrap(a), ""]),
+    "## NAVIGATE", "Directories: about/ experience/ projects/ skills/ education/ company/ contact/",
+    "Try: ls, cd projects, cat factweavers.md, help",
+  ]),
+  about: Dir({
+    "bio.txt": F(["# About", ...D.about.flatMap(a => [...wrap(a), ""])]),
+    "location.txt": F([D.location]),
+  }),
+  experience: Dir(Object.fromEntries(D.experience.map(j => [j.id + ".md", F([
+    "# " + j.role, j.company + " · " + j.period, "", ...wrap(j.summary), ...(j.points.length ? ["", "## HIGHLIGHTS", ...bullets(j.points)] : []),
+    ...(j.projects.length ? ["", "## PROJECTS", ...j.projects.map(p => "- ~/projects/" + p + ".md")] : []),
+  ])]))),
+  projects: Dir(Object.fromEntries(D.projects.map(p => [p.id + ".md", F(projectFile(p))]))),
+  skills: Dir({
+    "frontend.txt": F(["# Front-end", ...bullets(D.skills.frontend)]),
+    "backend.txt": F(["# Back-end", ...bullets(D.skills.backend)]),
+    "practices.txt": F(["# Practices", ...bullets(D.skills.practices)]),
+  }),
+  education: Dir(Object.fromEntries(D.education.map((e, i) => [["degree.md", "higher-secondary.md"][i] || "edu" + i + ".md", F(["# " + e.title, e.place, e.period])]))),
+  company: Dir({
+    "theblackit.md": F([
+      "# " + D.company.name, D.company.tagline, "", ...wrap(D.company.blurb), "",
+      "## WHAT WE DO", ...D.company.focus.flatMap(f => ["- " + f.title + ": " + f.text]), "",
+      "## WEB", D.company.url, D.company.email,
+    ]),
+    "values.md": F(["# Values", ...D.company.values.map(v => "- " + v.title + " — " + v.text)]),
+    ...Object.fromEntries(D.company.products.map(p => [p.id + ".md", F(["# " + p.name, "Status: " + p.status, "", ...wrap(p.text)])])),
+  }),
+  contact: Dir({
+    "email.txt": F([D.email]),
+    "github.txt": F([D.github]),
+    "linkedin.txt": F([D.linkedin]),
+    "company-email.txt": F([D.company.email]),
+  }),
+  ".secret": F(["You found the hidden file. Nice nose.", "Hint: try `sudo hire vaisakh`."]),
+});
+
+/* ---------- path handling ---------- */
+let cwd = [];
+const getNode = segs => segs.reduce((n, s) => n && n.type === "dir" ? n.children[s] : null, root);
+function findChild(dir, name) {
+  if (!dir || dir.type !== "dir") return null;
+  const keys = Object.keys(dir.children);
+  const k = keys.find(k => k === name) || keys.find(k => k.toLowerCase() === name.toLowerCase())
+    || keys.find(k => k.replace(/\.[^.]+$/, "").toLowerCase() === name.toLowerCase());
+  return k || null;
+}
+function resolve(path) {
+  const abs = path.startsWith("~") || path.startsWith("/");
+  let segs = abs ? [] : [...cwd];
+  for (const part of path.replace(/^~/, "").split("/").filter(Boolean)) {
+    if (part === ".") continue;
+    if (part === "..") { segs.pop(); continue; }
+    const k = findChild(getNode(segs), part);
+    if (!k) return null;
+    segs.push(k);
+  }
+  return { segs, node: getNode(segs) };
+}
+const pathStr = segs => "~" + (segs.length ? "/" + segs.join("/") : "");
+
+/* ---------- output ---------- */
+function fmt(line) {
+  let s = esc(line);
+  s = s.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>')
+       .replace(/\b([\w.+-]+@[\w-]+\.[\w.]+)/g, '<a href="mailto:$1">$1</a>');
+  if (line.startsWith("# ")) return `<span class="h1">${s.slice(2)}</span>`;
+  if (line.startsWith("## ")) return `<span class="h2">${s.slice(3)}</span>`;
+  if (line.startsWith("- ")) return `<span class="ok">▸</span> ${s.slice(2)}`;
+  return s;
+}
+function print(html = "", cls = "") { const d = document.createElement("div"); d.className = "ln " + cls; d.innerHTML = html; out.appendChild(d); }
+const printText = (lines, cls) => lines.forEach(l => print(fmt(l), cls));
+const err = m => print(esc(m), "err");
+const scroll = () => { screen.scrollTop = screen.scrollHeight; };
+
+function promptHTML() { return `<span class="u">guest@vaisakh</span>:<span class="p">${esc(pathStr(cwd))}</span>$`; }
+function refreshPrompt() { $("ps").innerHTML = promptHTML(); $("title").textContent = "guest@vaisakh: " + pathStr(cwd); }
+
+/* ---------- commands ---------- */
+const hidden = n => n.startsWith(".");
+const isDirName = (dir, k) => dir.children[k].type === "dir";
+const entry = (dirSegs, k, node) => {
+  const rel = [...dirSegs, k].join("/");
+  return node.type === "dir"
+    ? `<span class="d" data-cmd="cd ~/${esc(rel)}">${esc(k)}/</span>`
+    : `<span class="f" data-cmd="cat ~/${esc(rel)}">${esc(k)}</span>`;
+};
+
+const commands = {
+  help() {
+    const rows = [
+      ["ls [-l] [-a] [path]", "list directory contents"], ["cd <dir>", "change directory (cd .., cd ~, cd -)"],
+      ["cat <file>", "show a file (extension optional)"], ["pwd", "print working directory"],
+      ["tree [path]", "show the directory tree"], ["grep <word>", "search every file for a word"],
+      ["open <target>", "open github | linkedin | email | theblackit"], ["whoami / neofetch", "about this session / quick profile card"],
+      ["history", "previous commands"], ["clear (Ctrl+L)", "clear the screen"],
+      ["exit", "close the session"],
+    ];
+    print("<span class='h1'>Available commands</span>");
+    rows.forEach(([a, b]) => print(`  <span class="ok">${esc(a.padEnd(22))}</span><span class="dim">${esc(b)}</span>`));
+    print(); print("<span class='dim'>Tips: Tab autocompletes · ↑/↓ browse history · click any name in ls output.</span>");
+  },
+  ls(args) {
+    const flags = args.filter(a => a.startsWith("-")).join(""), paths = args.filter(a => !a.startsWith("-"));
+    const r = paths.length ? resolve(paths[0]) : { segs: cwd, node: getNode(cwd) };
+    if (!r) return err(`ls: cannot access '${paths[0]}': No such file or directory`);
+    if (r.node.type === "file") return print(esc(paths[0]));
+    let keys = Object.keys(r.node.children); if (!flags.includes("a")) keys = keys.filter(k => !hidden(k));
+    if (!keys.length) return;
+    if (flags.includes("l")) {
+      keys.forEach(k => { const n = r.node.children[k], d = n.type === "dir";
+        const size = d ? 4096 : n.content.join("\n").length;
+        print(`<span class="dim">${d ? "drwxr-xr-x" : "-rw-r--r--"} guest guest ${String(size).padStart(5)} Oct  8 </span>${entry(r.segs, k, n)}`); });
+    } else {
+      print(keys.map(k => entry(r.segs, k, r.node.children[k])).join("   "));
+    }
+  },
+  cd(args) {
+    const t = args[0];
+    if (!t || t === "~") cwd = [];
+    else if (t === "-") cwd = prevDir;
+    else {
+      const r = resolve(t);
+      if (!r) return err(`cd: ${t}: No such file or directory`);
+      if (r.node.type !== "dir") return err(`cd: ${t}: Not a directory`);
+      prevDir = cwd; cwd = r.segs;
+    }
+    refreshPrompt();
+  },
+  pwd() { print(esc("/home/guest" + (cwd.length ? "/" + cwd.join("/") : ""))); },
+  cat(args) {
+    if (!args.length) return err("cat: missing file operand");
+    args.forEach(a => {
+      const r = resolve(a);
+      if (!r) return err(`cat: ${a}: No such file or directory`);
+      if (r.node.type === "dir") return err(`cat: ${a}: Is a directory`);
+      printText(r.node.content); print();
+    });
+  },
+  tree(args) {
+    const r = args[0] ? resolve(args[0]) : { segs: cwd, node: getNode(cwd) };
+    if (!r || r.node.type !== "dir") return err(`tree: '${args[0]}': No such directory`);
+    print(`<span class="p">${esc(pathStr(r.segs))}</span>`);
+    let dirs = 0, files = 0;
+    (function walk(node, prefix) {
+      const keys = Object.keys(node.children).filter(k => !hidden(k));
+      keys.forEach((k, i) => {
+        const last = i === keys.length - 1, n = node.children[k];
+        print(`<span class="dim">${prefix}${last ? "└── " : "├── "}</span>` + (n.type === "dir" ? `<span class="d">${esc(k)}</span>` : esc(k)));
+        if (n.type === "dir") { dirs++; walk(n, prefix + (last ? "    " : "│   ")); } else files++;
+      });
+    })(r.node, "");
+    print(`<span class="dim">\n${dirs} directories, ${files} files</span>`);
+  },
+  grep(args) {
+    if (!args.length) return err("usage: grep <word>");
+    const q = args.join(" ").toLowerCase(); let hits = 0;
+    (function walk(node, segs) {
+      Object.entries(node.children).forEach(([k, n]) => {
+        if (n.type === "dir") return walk(n, [...segs, k]);
+        n.content.forEach(l => { if (l.toLowerCase().includes(q)) { hits++;
+          print(`<span class="p">${esc([...segs, k].join("/"))}</span><span class="dim">:</span> ${esc(l.replace(/^#+ |^- /, "").slice(0, 110))}`); } });
+      });
+    })(root, []);
+    if (!hits) err(`grep: no matches for '${q}'`);
+  },
+  open(args) {
+    const map = { github: D.github, linkedin: D.linkedin, email: "mailto:" + D.email, theblackit: D.company.url, blackit: D.company.url };
+    const t = (args[0] || "").toLowerCase();
+    if (!map[t]) return err("usage: open <github|linkedin|email|theblackit>");
+    print(`<span class="ok">Opening ${esc(map[t])} …</span>`);
+    window.open(map[t], t === "email" ? "_self" : "_blank", "noopener");
+  },
+  whoami() { print("guest — a curious visitor. The owner of this machine is vaisakh."); },
+  neofetch() {
+    const art = ["  __   __ _  ", "  \\ \\ / /| |/ /", "   \\ V / | ' / ", "    \\_/  |_|\\_\\ "];
+    const info = [
+      `<span class="h1">vaisakh</span>@<span class="h1">portfolio</span>`, "-----------------",
+      `<span class="h2">Role</span>: ${D.title}`, `<span class="h2">Company</span>: dbiz.ai`, `<span class="h2">Stack</span>: React, TypeScript, Highcharts`,
+      `<span class="h2">Also</span>: Node.js, MongoDB`, `<span class="h2">Venture</span>: theblackit`, `<span class="h2">Location</span>: ${D.location}`,
+    ];
+    const n = Math.max(art.length, info.length);
+    for (let i = 0; i < n; i++) print(`<span class="h1">${esc(art[i] || "              ")}</span>   ${info[i] || ""}`, "ps");
+  },
+  history() { hist.forEach((h, i) => print(`<span class="dim">${String(i + 1).padStart(4)}</span>  ${esc(h)}`)); },
+  clear() { out.innerHTML = ""; },
+  date() { print(esc(new Date().toString())); },
+  echo(args) { print(esc(args.join(" "))); },
+  sudo(args) {
+    if (args.join(" ") === "hire vaisakh") {
+      print("<span class='ok'>[sudo] permission granted. Great decision!</span>");
+      print(`Reach out: <a href="mailto:${D.email}">${D.email}</a>`);
+    } else err("guest is not in the sudoers file. This incident will be reported.");
+  },
+  exit() {
+    print("<span class='dim'>logout</span>"); input.disabled = true;
+    setTimeout(() => {
+      document.body.insertAdjacentHTML("beforeend",
+        `<div class="closed"><div>[ session closed ]<br><br>Thanks for stopping by.<br><a href="index.html">start over</a><a href="normal.html">normal mode</a></div></div>`);
+      try { window.close(); } catch (e) {}
+    }, 500);
+  },
+};
+commands.ll = a => commands.ls(["-l", ...a]);
+commands.quit = commands.logout = commands.exit;
+commands.cls = commands.clear;
+let prevDir = [];
+
+/* ---------- input loop ---------- */
+const hist = []; let hi = 0;
+function run(line) {
+  print(`<span class="ps">${promptHTML()} ${esc(line)}</span>`);
+  const parts = line.trim().split(/\s+/).filter(Boolean);
+  if (!parts.length) return;
+  hist.push(line.trim()); hi = hist.length;
+  const [cmd, ...args] = parts;
+  if (commands[cmd]) commands[cmd](args);
+  else err(`${cmd}: command not found. Type 'help' for a list of commands.`);
+}
+function submit(line) { run(line); refreshPrompt(); scroll(); }
+
+function complete() {
+  const v = input.value, parts = v.split(/\s+/), last = parts[parts.length - 1];
+  if (parts.length === 1) {
+    const m = Object.keys(commands).filter(c => c.startsWith(last));
+    if (m.length === 1) input.value = m[0] + " "; else if (m.length > 1) { print(esc(m.join("   "))); }
+    return;
+  }
+  const i = last.lastIndexOf("/"), dirPart = last.slice(0, i + 1), namePart = last.slice(i + 1);
+  const r = dirPart ? resolve(dirPart) : { node: getNode(cwd) };
+  if (!r || r.node.type !== "dir") return;
+  const m = Object.keys(r.node.children).filter(k => k.toLowerCase().startsWith(namePart.toLowerCase()) && (namePart.startsWith(".") || !hidden(k)));
+  if (!m.length) return;
+  if (m.length === 1) { const n = r.node.children[m[0]]; parts[parts.length - 1] = dirPart + m[0] + (n.type === "dir" ? "/" : ""); input.value = parts.join(" ") + (n.type === "dir" ? "" : " "); }
+  else { print(`<span class="ps">${promptHTML()} ${esc(v)}</span>`); print(esc(m.join("   "))); }
+}
+
+input.addEventListener("keydown", e => {
+  if (e.key === "Enter") { const v = input.value; input.value = ""; submit(v); }
+  else if (e.key === "Tab") { e.preventDefault(); complete(); scroll(); }
+  else if (e.key === "ArrowUp") { e.preventDefault(); if (hi > 0) input.value = hist[--hi]; }
+  else if (e.key === "ArrowDown") { e.preventDefault(); hi = Math.min(hi + 1, hist.length); input.value = hist[hi] || ""; }
+  else if (e.ctrlKey && e.key.toLowerCase() === "l") { e.preventDefault(); commands.clear(); }
+  else if (e.ctrlKey && e.key.toLowerCase() === "c") { print(`<span class="ps">${promptHTML()} ${esc(input.value)}^C</span>`); input.value = ""; }
+});
+screen.addEventListener("click", () => { if (!getSelection().toString()) input.focus(); });
+document.addEventListener("click", e => {
+  const c = e.target.closest("[data-cmd]"); if (!c) return;
+  submit(c.dataset.cmd); input.focus();
+});
+
+/* ---------- boot ---------- */
+refreshPrompt();
+["Welcome to <span class='h1'>vaisakh-os</span> 1.0 (portfolio edition)", "",
+ "Type <span class='ok'>help</span> to see commands, or <span class='ok'>ls</span> to look around.",
+ "Start with <span class='ok'>cat README.md</span>.", ""].forEach(l => print(l));
+input.focus();
+</script>
+</body>
+</html>
